@@ -48,11 +48,17 @@ jobs:
 
       - name: Copy Index.html
         run: cp README.md profile/index.html
+      
+      - name: Build With Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: profile
+          destination: _site
 
-      - name: Upload Pages artifact
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: profile
+          path: _site
 
   deploy:
     needs: build
