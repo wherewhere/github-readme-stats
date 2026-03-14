@@ -49,6 +49,9 @@ jobs:
       - name: Copy README.md
         run: cp README.md profile
 
+      - name: Copy _config.yml
+        run: cp _config.yml profile/_config.yml
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
