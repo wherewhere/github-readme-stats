@@ -46,14 +46,16 @@ jobs:
           path: profile/top-langs.nord.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Copy Index.html
+      - name: Copy index.html
         run: cp README.md profile/index.html
+      
+      - name: Copy _config.yml
+        run: cp _config.yml profile/_config.yml
       
       - name: Build With Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: profile
-          destination: _site
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
