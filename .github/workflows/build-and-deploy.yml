@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Generate Stats Card
-        uses: stats-organization/github-readme-stats-action@v1
+        uses: stats-organization/github-readme-stats-action@v2
         with:
           card: stats
           options: "username=${{ github.repository_owner }}&show_icons=true&count_private=true&locale=cn"
@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Stats Card (Dark)
-        uses: stats-organization/github-readme-stats-action@v1
+        uses: stats-organization/github-readme-stats-action@v2
         with:
           card: stats
           options: "username=${{ github.repository_owner }}&theme=nord&show_icons=true&count_private=true&locale=cn"
@@ -31,7 +31,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Top Languages Card
-        uses: stats-organization/github-readme-stats-action@v1
+        uses: stats-organization/github-readme-stats-action@v2
         with:
           card: top-langs
           options: "username=${{ github.repository_owner }}&layout=compact&show_icons=true&count_private=true&locale=cn"
@@ -39,7 +39,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Top Languages Card (Dark)
-        uses: stats-organization/github-readme-stats-action@v1
+        uses: stats-organization/github-readme-stats-action@v2
         with:
           card: top-langs
           options: "username=${{ github.repository_owner }}&layout=compact&theme=nord&show_icons=true&count_private=true&locale=cn"
@@ -58,11 +58,12 @@ jobs:
           source: profile
 
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
   deploy:
+    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: build
 
     permissions:
@@ -81,9 +82,10 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   wayback:
+    if: github.event_name == 'schedule'
     needs: deploy
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -95,7 +97,7 @@ jobs:
           url: ${{ needs.deploy.outputs.page_url }}
 
   workflow-keepalive:
-    if: github.event_name == 'schedule'
+    needs: wayback
     runs-on: ubuntu-latest
 
     permissions:
