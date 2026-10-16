@@ -97,7 +97,7 @@ jobs:
           url: ${{ needs.deploy.outputs.page_url }}
 
   workflow-keepalive:
-    needs: wayback
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
 
     permissions:
